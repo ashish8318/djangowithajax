@@ -1,0 +1,91 @@
+<script>
+
+$ ("#datasave").click(function(){
+    let name=$("#uname").val();
+    let email=$("#uemail").val();
+    let pass=$("#upass").val();
+    let id=$("#uid").val();
+    let csr=$("input[name=csrfmiddlewaretoken]").val();
+    console.log(csr);
+    if (name==""|| email=="" || pass=="")
+    {$("#info").text("Please fill Data");}
+    else{
+    output="";
+    data={"name":name,"email":email,"password":pass,"id":id,"csrfmiddlewaretoken":csr};
+    $.ajax({
+      url:"{% url 'adduser' %}",
+      method:"POST",
+      data:data,
+      success : function(data)
+      {//console.log(data);
+      if(data.status==1 || data.status==2)
+      {let x=data.userdata;
+      console.log(x);
+      for(i=0;i<x.length;i++)
+      {
+       output +="<tr><td>"+ x[i].name + "</td><td>" + x[i].email + "</td><td>" + x[i].password + "</td><td><button class='uk-button uk-button-default uk-button-small editdata' type='uk-button'  sid="+x[i].id+" >Edit</button></td><td><button class='uk-button uk-button-danger uk-button-small del' type='uk-button' did="+ x[i].id + ">Delete</button></td></tr>"
+      }
+      $("#tbody").html(output);
+      $("form")[0].reset();
+      let id=$("#uid").val("");
+      $("#info").text("Add User successfully");
+      }
+      else if(data.status==2){
+        $("#info").text("User data change successfully");
+      }
+      else{$("#info").text("Something is worng")}
+      }
+    });
+    }
+});
+$("tbody").on("click",".del",function(){
+     //console.log("delete");
+     let id=$(this).attr("did");
+     console.log(id);
+     let csr=$("input[name=csrfmiddlewaretoken]").val();
+     data={"id":id,"csrfmiddlewaretoken":csr};
+     x=this;
+     $.ajax({
+           url:"{% url 'delete' %}",
+           method:"POST",
+           data:data,
+           success: function(data){
+             if(data.status==1)
+             {//console.log(data);
+             $(x).closest("tr").fadeOut();
+             $("#info").text("Delete user successfully");}
+             else{
+               $("#info").text("Not Delete");;
+             }
+           }
+     });
+    });
+
+    $("tbody").on("click",".editdata",function(){
+     //console.log("delete");
+     let id=$(this).attr("sid");
+     console.log(id);
+     let csr=$("input[name=csrfmiddlewaretoken]").val();
+     data={"id":id,"csrfmiddlewaretoken":csr};
+     x=this;
+     $.ajax({
+           url:"{% url 'edit' %}",
+           method:"POST",
+           data:data,
+           success: function(data){
+             if(data.status==1)
+             {//console.log(data);
+             //
+             console.log(data.userdata.name);
+             $("#uname").val(data.userdata.name);
+             $("#uemail").val(data.userdata.email);
+             $("#upass").val(data.userdata.password)
+             $("#uid").val(data.userdata.id);
+             $("#info").text("Please change data ");}
+             else{
+               $("#info").text("Something is Worng ");;
+             }
+           }
+     });
+    });
+</script>

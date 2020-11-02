@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Djang with Ajax</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- UIkit CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.5.9/dist/css/uikit.min.css" />
+
+<!-- UIkit JS -->
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.5.9/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.5.9/dist/js/uikit-icons.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+    <body>
+       
+        <div class="uk-alert-primary" uk-alert>
+            <a class="uk-alert-close" uk-close></a>
+            {% if messages %}
+            {% for message in messages %}
+            <p>{{message}}.</p>
+            {% endfor %}
+            {% else %}
+            <p id="info">Welcome to Django With ajax.</p>
+            {% endif %}
+        </div>
+        <div class="uk-child-width-1-2@m uk-grid-small uk-grid-match" uk-grid>
+            <div>
+                <div class="uk-card uk-card-default uk-card-body">
+                    <h3 class="uk-card-title">User form</h3>
+                    <form >
+                        
+                        <fieldset class="uk-fieldset">
+                           {% csrf_token %}
+                            <legend class="uk-legend">User Name</legend>
+                            <input class="uk-input" type="hidden" placeholder="Input" id="uid">
+                            <div class="uk-margin">
+                                <input class="uk-input" type="text" placeholder="Input" id="uname" >
+                            </div>
+        
+                            <legend class="uk-legend">Email</legend>
+                            <div class="uk-margin">
+                                <input class="uk-input" type="Email" placeholder="Input" id="uemail">
+                            </div>
+                            <legend class="uk-legend">Password</legend>
+                            <div class="uk-margin">
+                                <input class="uk-input" type="password"  id="upass" >
+                            </div>
+                            
+                            <div class="uk-margin">
+                                <button class="uk-button uk-button-primary" type="button" tabindex="-1" id="datasave">Save</button>
+                            </div>
+                    
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div>
+                <div class="uk-card uk-card-primary uk-card-body">
+                    <h3 class="uk-card-title">User Data</h3>
+                    <table class="uk-table uk-table-divider">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Passsword</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                        {% if userdata %}
+                        {% for i in userdata %}
+                            <tr>
+                                <td>{{i.name}}</td>
+                                <td>{{i.email}}}</td>
+                                <td>{{i.password}}</td>
+                                <td><button class="uk-button uk-button-default uk-button-small editdata" type="uk-button"  sid='{{i.id}}' >Edit</button></td>
+                                <td><button class="uk-button uk-button-danger uk-button-small del"  type="uk-button" did='{{i.id}}'  >Delete</button></td>
+                            </tr>
+                        {% endfor %}
+                        {% endif %} 
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+           
+        </div>
+    {% include "ajax.html" %}
+    </body>
+    
+</html>
